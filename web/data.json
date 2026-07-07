@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T19:47:44.746Z",
+  "updated": "2026-07-07T19:56:51.102Z",
   "summary": "MIXED",
   "indices": [
     {
@@ -7,7 +7,7 @@
       "name": "Pawn Index",
       "tick": "FCFS · EZPW vs S&P",
       "group": "distress",
-      "value": 2.9,
+      "value": 3.1,
       "unit": "% vs S&P (5d)",
       "tone": "stress",
       "signalText": "rising · stress",
@@ -27,7 +27,7 @@
       "name": "Dollar-Store Trade-Down",
       "tick": "DG · DLTR vs XLY",
       "group": "distress",
-      "value": -1,
+      "value": -1.1,
       "unit": "% vs retail (5d)",
       "tone": "ok",
       "signalText": "easing",
@@ -47,7 +47,7 @@
       "name": "Debt-Collector Barometer",
       "tick": "PRAA · ECPG vs S&P",
       "group": "distress",
-      "value": -4.1,
+      "value": -4.2,
       "unit": "% vs S&P (5d)",
       "tone": "ok",
       "signalText": "easing",
@@ -87,7 +87,7 @@
       "name": "Cardboard Box Index",
       "tick": "PKG · IP · SW",
       "group": "physical",
-      "value": -3.1,
+      "value": -3,
       "unit": "% vs S&P (5d)",
       "tone": "warn",
       "signalText": "contracting",
@@ -107,7 +107,7 @@
       "name": "RV Canary",
       "tick": "THO · WGO",
       "group": "physical",
-      "value": -5.3,
+      "value": -4.8,
       "unit": "% vs S&P (5d)",
       "tone": "warn",
       "signalText": "warning",
@@ -128,7 +128,7 @@
       "tick": "SKEW vs VIX",
       "group": "fear",
       "value": 145,
-      "unit": "SKEW · VIX 16.3",
+      "unit": "SKEW · VIX 16.4",
       "tone": "warn",
       "signalText": "diverging",
       "spark": [
@@ -180,12 +180,12 @@
       "name": "Tanker Tell",
       "tick": "adsb.lol · US refuelers",
       "group": "fear",
-      "value": null,
+      "value": 21,
       "unit": "refuelers airborne",
-      "tone": "live",
-      "signalText": "live feed",
+      "tone": "warn",
+      "signalText": "elevated · live",
       "spark": [],
-      "read": "US military tankers airborne right now vs a ~3-plane baseline. Refuelers can't hide — an anomalous surge preceded the June 2025 strikes by days.",
+      "read": "US military tankers airborne right now vs a ~3-plane baseline. Refuelers can't hide — an anomalous surge preceded the June 2025 strikes by days. (316 mil aircraft tracked)",
       "src": "adsb.lol /v2/mil · live"
     }
   ]

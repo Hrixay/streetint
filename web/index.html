@@ -11,177 +11,333 @@
 <style>
   :root{
     --bg:#070a07; --panel:#0c110c; --panel2:#0f160f; --line:#1c2a1c; --line2:#294029;
-    --green:#43e97b; --greendim:#2f9d57; --grid:#0f1a0f;
+    --green:#43e97b; --greendim:#2f9d57; --grid:#0d160d;
     --cyan:#38e1e1; --amber:#ffc24b; --red:#ff5d6c; --magenta:#c58bff;
     --txt:#b9d4b9; --txtdim:#6f8c6f; --txtbright:#e8ffe8;
     --pixel:'Press Start 2P',monospace; --mono:'Share Tech Mono',monospace; --vt:'VT323',monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:15px;line-height:1.55;
+  body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:15px;line-height:1.6;
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:44px 44px;-webkit-font-smoothing:antialiased}
+    background-size:46px 46px;-webkit-font-smoothing:antialiased}
   a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 18px 70px}
 
-  .statusbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:12px;letter-spacing:.04em;
-    color:var(--txtdim);padding:9px 0;border-bottom:1px solid var(--line);text-transform:uppercase}
-  .statusbar .seg{display:flex;align-items:center;gap:6px}
+  /* top nav */
+  .topnav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    padding:12px 20px;background:rgba(7,10,7,.92);backdrop-filter:blur(4px);border-bottom:1px solid var(--line2)}
+  .brand{font-family:var(--pixel);font-size:15px;color:var(--txtbright);text-shadow:0 0 12px rgba(67,233,123,.4);letter-spacing:.02em}
+  .brand .hl{color:var(--green)}
+  .topnav nav{display:flex;gap:4px}
+  .topnav a{font-size:13px;color:var(--txtdim);text-transform:uppercase;letter-spacing:.05em;padding:5px 11px;border-radius:3px}
+  .topnav a:hover{color:var(--txt);text-decoration:none;background:var(--panel)}
+  .topnav a.on{color:var(--green);border:1px solid var(--line2)}
+  .topnav .status{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:11.5px;color:var(--txtdim);text-transform:uppercase;letter-spacing:.04em}
   .dotpulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
   .st-red{color:var(--red)} .st-green{color:var(--green)}
-  .push{margin-left:auto}
 
-  header.mast{padding:34px 0 22px;border-bottom:2px solid var(--line2)}
-  .callsign{font-family:var(--pixel);font-size:11px;color:var(--greendim);letter-spacing:.12em;margin-bottom:16px}
-  h1.word{font-family:var(--pixel);font-size:clamp(24px,5.5vw,50px);line-height:1.05;color:var(--txtbright);
-    text-shadow:0 0 18px rgba(67,233,123,.4);letter-spacing:.02em}
-  h1.word .hl{color:var(--green)}
-  .tagline{font-size:16px;color:var(--txtdim);margin-top:14px;letter-spacing:.02em;max-width:74ch}
-  .tagline b{color:var(--txt)}
-  .streetread{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:13px;color:var(--txtdim);
-    text-transform:uppercase;letter-spacing:.06em}
-  .streetread .val{font-family:var(--vt);font-size:26px;letter-spacing:.03em}
+  /* shell */
+  .shell{display:flex;max-width:1240px;margin:0 auto;align-items:flex-start}
+  .sidebar{flex:0 0 246px;position:sticky;top:57px;align-self:flex-start;max-height:calc(100vh - 57px);overflow-y:auto;
+    padding:20px 14px 40px;border-right:1px solid var(--line)}
+  .side-lbl{font-family:var(--pixel);font-size:9px;color:var(--greendim);letter-spacing:.1em;text-transform:uppercase;margin:18px 8px 8px}
+  .side-lbl:first-child{margin-top:0}
+  .side-item{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;
+    font-family:var(--mono);font-size:13.5px;color:var(--txt);padding:7px 9px;border-radius:3px;cursor:pointer;transition:background .12s;letter-spacing:.01em}
+  .side-item:hover{background:var(--panel)}
+  .side-item.on{background:var(--panel2);color:var(--txtbright);box-shadow:inset 2px 0 0 var(--green)}
+  .side-item .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--txtdim)}
+  .side-item .q{margin-left:auto;font-size:9px;color:var(--txtdim);text-transform:uppercase;letter-spacing:.05em}
+  .dot.stress{background:var(--red)} .dot.warn{background:var(--amber)} .dot.ok{background:var(--green)}
+  .dot.live{background:var(--cyan)} .dot.neut{background:var(--txtdim)}
+
+  main{flex:1;min-width:0;padding:26px 26px 70px}
+
+  /* overview */
+  .streetread{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;font-size:13px;color:var(--txtdim);text-transform:uppercase;letter-spacing:.06em}
+  .streetread .val{font-family:var(--vt);font-size:30px;letter-spacing:.03em}
   .sr-stress{color:var(--red)} .sr-mixed{color:var(--amber)} .sr-steady{color:var(--green)}
-
-  .sectionlbl{font-family:var(--pixel);font-size:11px;color:var(--greendim);letter-spacing:.1em;
-    margin:36px 0 14px;padding-bottom:9px;border-bottom:1px solid var(--line);text-transform:uppercase}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
-  .card{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:15px 16px 14px;
-    transition:border-color .15s,transform .15s}
-  .card:hover{border-color:var(--line2);transform:translateY(-2px)}
-  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
-  .card .name{font-size:15px;color:var(--txtbright);letter-spacing:.02em;text-transform:uppercase}
-  .card .tick{font-size:11px;color:var(--txtdim);margin-top:2px}
-  .sig{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;border:1px solid}
+  .lede{font-size:15px;color:var(--txtdim);max-width:76ch;margin:2px 0 26px;line-height:1.6}
+  .lede b{color:var(--txt)}
+  .sectionlbl{font-family:var(--pixel);font-size:10px;color:var(--greendim);letter-spacing:.1em;
+    margin:26px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);text-transform:uppercase}
+  .rows{display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;align-items:center;gap:16px;padding:14px 16px;border:1px solid var(--line);background:var(--panel);
+    border-radius:4px;cursor:pointer;transition:border-color .15s,transform .12s}
+  .row:hover{border-color:var(--line2);transform:translateX(3px)}
+  .row .nm{flex:0 0 210px} .row .nm .t{font-size:14.5px;color:var(--txtbright);text-transform:uppercase}
+  .row .nm .k{font-size:11px;color:var(--txtdim)}
+  .row .rd{flex:1;min-width:0;font-size:12.5px;color:var(--txtdim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .vwrap{flex:0 0 auto;text-align:right;min-width:96px}
+  .row .v{font-family:var(--vt);font-size:30px;line-height:1;color:var(--txtbright)}
+  .row .sig{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid;white-space:nowrap}
+  .row .arr{color:var(--txtdim);font-size:16px}
   .t-stress{color:var(--red);border-color:var(--red)} .t-warn{color:var(--amber);border-color:var(--amber)}
   .t-ok{color:var(--green);border-color:var(--green)} .t-live{color:var(--cyan);border-color:var(--cyan)}
   .t-neut{color:var(--txtdim);border-color:var(--line2)}
-  .valrow{display:flex;align-items:baseline;gap:10px;margin:2px 0 8px}
-  .val{font-family:var(--vt);font-size:40px;line-height:1;color:var(--txtbright)}
-  .unit{font-size:12px;color:var(--txtdim)}
-  .spark{margin:4px 0 10px;display:block}
-  .read{font-size:13px;color:var(--txt);line-height:1.5}
-  .src{font-size:11px;color:var(--greendim);margin-top:10px;letter-spacing:.03em}
-  .loading{color:var(--txtdim);padding:30px 0;font-size:14px}
 
-  .api{margin-top:40px;border:1px dashed var(--line2);border-radius:4px;padding:20px 22px;background:var(--panel)}
-  .api h3{font-family:var(--pixel);font-size:12px;color:var(--cyan);letter-spacing:.06em;margin-bottom:12px}
-  .api p{font-size:13.5px;color:var(--txtdim);max-width:72ch;margin-bottom:14px}
-  .api pre{background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:12px 14px;overflow-x:auto;
-    font-family:var(--mono);font-size:12.5px;color:var(--txt);line-height:1.6}
-  .api .k{color:var(--magenta)} .api .s{color:var(--amber)} .api .n{color:var(--cyan)}
+  /* detail page */
+  .crumb{font-size:12px;color:var(--txtdim);margin-bottom:16px}
+  .crumb a{color:var(--txtdim)} .crumb a:hover{color:var(--green)}
+  .d-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .d-title{font-family:var(--pixel);font-size:clamp(18px,3vw,26px);color:var(--txtbright);text-shadow:0 0 14px rgba(67,233,123,.3);line-height:1.2}
+  .d-tick{font-size:13px;color:var(--txtdim);margin-top:10px;letter-spacing:.03em}
+  .d-valbox{text-align:right}
+  .d-val{font-family:var(--vt);font-size:64px;line-height:.9;color:var(--txtbright)}
+  .d-unit{font-size:12px;color:var(--txtdim)}
+  .d-sig{display:inline-block;margin-top:8px;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:2px;border:1px solid}
+  .d-chart{margin:22px 0 26px;border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:16px}
+  .d-read{font-size:15.5px;line-height:1.7;color:var(--txt);max-width:74ch;margin-bottom:8px}
 
-  footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--txtdim);line-height:1.7}
+  .method{margin-top:30px}
+  .m-block{border:1px solid var(--line);border-left:2px solid var(--line2);background:var(--panel);border-radius:0 4px 4px 0;padding:16px 20px;margin-bottom:10px}
+  .m-block h4{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--greendim);margin-bottom:8px}
+  .m-block p{font-size:14px;line-height:1.65;color:var(--txt);max-width:76ch}
+  .m-block p+p{margin-top:9px}
+  .m-block code{font-family:var(--mono);color:var(--cyan);background:var(--bg);padding:1px 6px;border-radius:3px;font-size:13px}
+  .m-block .accnote{color:var(--amber)}
+  .srcpill{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--txt);background:var(--bg);border:1px solid var(--line2);border-radius:3px;padding:4px 10px;margin:4px 6px 0 0}
+  .planned{border:1px dashed var(--line2);border-radius:4px;padding:30px 24px;color:var(--txtdim);font-size:14.5px;line-height:1.7;max-width:74ch}
+  .planned b{color:var(--amber)}
+
+  /* dev + method pages */
+  .prose{max-width:78ch}
+  .prose h2{font-family:var(--pixel);font-size:14px;color:var(--txtbright);margin:6px 0 16px;line-height:1.4}
+  .prose h3{font-size:14px;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin:24px 0 8px}
+  .prose p{font-size:14.5px;line-height:1.7;color:var(--txt);margin-bottom:12px}
+  .prose pre{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:14px 16px;overflow-x:auto;
+    font-size:12.5px;color:var(--txt);line-height:1.6;margin:8px 0 16px}
+  .prose .k{color:var(--magenta)} .prose .s{color:var(--amber)} .prose .n{color:var(--cyan)}
+  table.dtl{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 16px}
+  table.dtl th,table.dtl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  table.dtl th{color:var(--greendim);text-transform:uppercase;font-size:11px;letter-spacing:.05em;font-weight:400}
+
+  footer{border-top:1px solid var(--line);margin:44px 26px 0;padding:18px 0 30px;font-size:12px;color:var(--txtdim);line-height:1.7;max-width:1240px}
   footer b{color:var(--txt)}
-  .disclaimer{margin-top:10px;color:var(--greendim);font-size:11.5px}
+  @media(max-width:900px){ .shell{flex-direction:column} .sidebar{position:static;flex-basis:auto;max-height:none;width:100%;border-right:none;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:2px} .side-lbl{grid-column:1/-1} }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="statusbar">
-    <span class="seg"><span class="dotpulse"></span>STATUS: <span class="st-green">OPERATIONAL</span></span>
-    <span class="seg" id="clock">--:--:-- UTC</span>
-    <span class="seg">STOCK MARKET: <span id="mkt" class="st-red">—</span></span>
-    <span class="seg push" id="updated">SNAPSHOT · —</span>
+<div class="topnav">
+  <a class="brand" href="#/" style="text-decoration:none">STREET<span class="hl">INT</span></a>
+  <nav>
+    <a href="#/" data-nav="home">Indices</a>
+    <a href="#/developers" data-nav="developers">Developers</a>
+    <a href="#/method" data-nav="method">Method</a>
+  </nav>
+  <div class="status">
+    <span><span class="dotpulse"></span>OPERATIONAL</span>
+    <span id="clock">--:--:-- UTC</span>
+    <span>MKT: <span id="mkt" class="st-red">—</span></span>
   </div>
-
-  <header class="mast">
-    <div class="callsign">STREETINT // STREET-LEVEL ECONOMIC INTELLIGENCE</div>
-    <h1 class="word">STREET<span class="hl">INT</span></h1>
-    <p class="tagline">The world reads GDP. We read <b>pawn shops, cardboard boxes, and the planes over the Atlantic.</b> Ten unconventional indicators — verified, free-sourced, computed live, and served as an API.</p>
-    <div class="streetread">Street read <span class="val" id="summary">—</span></div>
-  </header>
-
-  <div id="content"><div class="loading">// Fetching live signals…</div></div>
-
-  <div class="api">
-    <h3>// STREETINT SERVES ITS OWN API</h3>
-    <p>Every index is computed by a scheduled worker and served as JSON. Any dashboard can pull these values with one request — the weird front page and any serious tool drink from the same tap.</p>
-    <pre><span class="k">GET</span> https://streetint.pages.dev/v1/indices
-
-{
-  <span class="s">"summary"</span>: <span class="s">"MIXED"</span>,
-  <span class="s">"indices"</span>: [
-    { <span class="s">"key"</span>:<span class="s">"pawn_index"</span>, <span class="s">"value"</span>:<span class="n">2.4</span>, <span class="s">"tone"</span>:<span class="s">"stress"</span> },
-    { <span class="s">"key"</span>:<span class="s">"tanker_tell"</span>, <span class="s">"value"</span>:<span class="n">22</span>, <span class="s">"tone"</span>:<span class="s">"warn"</span> }
-  ],
-  <span class="s">"updated"</span>: <span class="s">"2026-07-07T…Z"</span>
-}</pre>
-  </div>
-
-  <footer>
-    <b>STREETINT</b> — reading the economy sideways. Ten indicators mined from <i>Freakonomics</i> and the wider tradition of unconventional signals, each fact-checked and free-sourced.<br>
-    Data: Yahoo Finance · CBOE · The Economist · adsb.lol. All computed keyless on a schedule.
-    <div class="disclaimer">// Not investment advice. Indicators are interesting, not infallible. Built by Hriday · an experiment.</div>
-  </footer>
-
 </div>
 
-<script>
-  const GROUPS = [
-    ['distress', '// WHEN MONEY GETS TIGHT'],
-    ['physical', "// THE PHYSICAL ECONOMY CAN'T LIE"],
-    ['fear', '// FEAR, MONEY & THE WORLD'],
-  ];
-  const TONE = { stress:'t-stress', warn:'t-warn', ok:'t-ok', live:'t-live', neut:'t-neut' };
-  const TONE_STROKE = { stress:'#ff5d6c', warn:'#ffc24b', ok:'#43e97b', live:'#38e1e1', neut:'#6f8c6f' };
-  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main id="main"><div style="color:var(--txtdim);padding:30px 0">// Fetching live signals…</div></main>
+</div>
 
-  function sparkSVG(pts, tone) {
-    if (!pts || pts.length < 2) return '<div style="height:30px"></div>';
-    const min = Math.min(...pts), max = Math.max(...pts), rng = (max - min) || 1;
-    const W = 200, H = 30;
-    const poly = pts.map((p, i) => `${(i / (pts.length - 1) * W).toFixed(1)},${(H - ((p - min) / rng) * (H - 6) - 3).toFixed(1)}`).join(' ');
-    return `<svg class="spark" width="100%" height="30" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline points="${poly}" fill="none" stroke="${TONE_STROKE[tone] || '#6f8c6f'}" stroke-width="2"/></svg>`;
-  }
-  function card(i) {
-    const v = i.value == null ? '—' : i.value;
-    return `<div class="card">
-      <div class="top"><div><div class="name">${esc(i.name)}</div><div class="tick">${esc(i.tick)}</div></div>
-        <span class="sig ${TONE[i.tone] || 't-neut'}">${esc(i.signalText)}</span></div>
-      <div class="valrow"><span class="val">${esc(v)}</span><span class="unit">${esc(i.unit || '')}</span></div>
-      ${sparkSVG(i.spark, i.tone)}
-      <div class="read">${esc(i.read)}</div>
-      <div class="src">SRC · ${esc(i.src)}</div>
-    </div>`;
-  }
-  function marketOpen() {
-    const now = new Date();
-    const et = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    const wd = et.getDay() >= 1 && et.getDay() <= 5;
-    const mins = et.getHours() * 60 + et.getMinutes();
-    return wd && mins >= 570 && mins < 960;
-  }
-  function render(data) {
-    const c = document.getElementById('content');
-    let html = '';
-    for (const [g, lbl] of GROUPS) {
-      const items = data.indices.filter((i) => i.group === g);
-      if (!items.length) continue;
-      html += `<div class="sectionlbl">${lbl}</div><div class="grid">${items.map(card).join('')}</div>`;
+<footer>
+  <b>STREETINT</b> — reading the economy sideways. Indicators mined from <i>Freakonomics</i> and the wider tradition of unconventional signals, each fact-checked and free-sourced.
+  Data: Yahoo Finance · CBOE · The Economist · adsb.lol. <span style="color:var(--greendim)">// Not investment advice. Built by Hriday — an experiment.</span>
+</footer>
+
+<script>
+const GROUPS=[['distress','When money gets tight'],['physical','The physical economy'],['fear','Fear, money & the world']];
+const TONE={stress:'t-stress',warn:'t-warn',ok:'t-ok',live:'t-live',neut:'t-neut'};
+const STROKE={stress:'#ff5d6c',warn:'#ffc24b',ok:'#43e97b',live:'#38e1e1',neut:'#6f8c6f'};
+const esc=(s)=>String(s).replace(/[&<>]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+let DATA=null;
+
+// Editorial methodology — filled in one index at a time, together.
+const METHODS={
+  pawn_index:{
+    status:'live',
+    measures:"Household financial distress at the very bottom of the credit ladder. A pawn loan is the loan of last resort — you only walk into a pawn shop after the bank, the credit card, and family have all said no. So when pawn activity rises, real household stress is rising, often months before it shows up in official statistics.",
+    truth:"The honest ground truth is <b>same-store pawn-loan receivables growth</b>, which FirstCash (FCFS) and EZCORP (EZPW) — together roughly the entire listed US pawn industry — report every quarter in their SEC filings. It's accurate, but it lags by a quarter and only updates four times a year.",
+    proxy:"For a number that moves <i>today</i>, we compute the 5-day relative strength of the FCFS + EZPW basket against the S&amp;P 500. When these lenders outrun the market, traders are betting pawn demand is climbing. The formula: <code>(pawn basket 5-day return) − (S&amp;P 5-day return)</code>, in percentage points.",
+    control:"One critical adjustment: pawn collateral is mostly <b>gold</b>, so these companies' profits rise mechanically when the gold price rises — which would fake a distress signal. We track the gold move alongside and treat a pawn rally that's really just a bullion rally with suspicion. (Right now gold's own move is shown inside the reading.)",
+    accuracy:"This is a directional proxy, not a census. Stock prices lead and overshoot the real pawn cycle; a two-name basket carries company-specific noise (an earnings miss, a buyback). The true confirmation is the quarterly same-store data. What gives us confidence in the signal itself: pawn balances demonstrably rose in the 2008 crisis and again in 2022–23. We label this a <span class='accnote'>watch-it-move</span> indicator, not a precise gauge.",
+    sources:[
+      {n:'Yahoo Finance chart API',d:'FCFS · EZPW · SPY · GC=F — free, keyless, daily closes',live:true},
+      {n:'SEC EDGAR (planned)',d:'quarterly same-store loan growth as a ground-truth anchor',live:false},
+      {n:'Google Trends (considered)',d:'"pawn shop near me" search interest — a live demand cross-check; fragile to run server-side, so not in v1',live:false},
+    ],
+  },
+};
+const PLANNED={
+  dollar_store:'Same idea as the pawn index, one rung up: are shoppers trading down to dollar stores?',
+  debt_collector:'The rare stocks that go up when loans go bad — a default wave, priced early.',
+  copper_gold:'Copper is pure industry, gold is pure fear. Their ratio isolates growth expectations.',
+  cardboard:'Almost everything ships in a box. Box demand cools before GDP admits a slowdown.',
+  rv_canary:'One Indiana county builds 80% of US RVs — the most cancellable purchase there is.',
+  quiet_fear:'Crash insurance being bought while markets look calm. Fear without stress.',
+  big_mac:'A burger as a currency-stress detector. The widest gap flags the most-pressured currency.',
+  baltic_dry:"The price to hire a cargo ship — impossible to fake, every quote is a real cargo.",
+  tanker_tell:'US military refuelers airborne right now. Refuelers can\'t hide — a mobilization tell.',
+};
+
+function sparkSVG(pts,tone,w,h){w=w||600;h=h||90;
+  if(!pts||pts.length<2)return '<div style="height:'+h+'px;display:flex;align-items:center;color:var(--txtdim);font-size:12px">// no series for this feed</div>';
+  const mn=Math.min(...pts),mx=Math.max(...pts),rng=(mx-mn)||1;
+  const poly=pts.map((p,i)=>`${(i/(pts.length-1)*w).toFixed(1)},${(h-((p-mn)/rng)*(h-14)-7).toFixed(1)}`).join(' ');
+  const last=pts[pts.length-1],lx=w,ly=(h-((last-mn)/rng)*(h-14)-7).toFixed(1);
+  return `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${poly}" fill="none" stroke="${STROKE[tone]||'#6f8c6f'}" stroke-width="2"/><circle cx="${lx-3}" cy="${ly}" r="3" fill="${STROKE[tone]||'#6f8c6f'}"/></svg>`;
+}
+function byKey(k){return DATA.indices.find((i)=>i.key===k);}
+
+function buildSidebar(route){
+  const sb=document.getElementById('sidebar');
+  let h='<div class="side-lbl">Overview</div>'+
+    `<button class="side-item ${route==='home'?'on':''}" onclick="go('/')"><span class="dot"></span>All indices</button>`;
+  for(const [g,lbl] of GROUPS){
+    h+=`<div class="side-lbl">${lbl}</div>`;
+    for(const i of DATA.indices.filter((x)=>x.group===g)){
+      const active=route==='i:'+i.key;
+      const planned=!(METHODS[i.key]&&METHODS[i.key].status==='live');
+      h+=`<button class="side-item ${active?'on':''}" onclick="go('/i/${i.key}')">
+        <span class="dot ${i.tone}"></span>${esc(i.name)}${planned?'<span class="q">soon</span>':''}</button>`;
     }
-    c.innerHTML = html;
-    const s = document.getElementById('summary');
-    s.textContent = data.summary;
-    s.className = 'val ' + (data.summary === 'DISTRESS RISING' ? 'sr-stress' : data.summary === 'STEADY' ? 'sr-steady' : 'sr-mixed');
-    if (data.updated) {
-      const d = new Date(data.updated);
-      document.getElementById('updated').textContent = 'SNAPSHOT · ' + d.toISOString().slice(0, 16).replace('T', ' ') + 'Z';
+  }
+  h+='<div class="side-lbl">Build</div>'+
+     `<button class="side-item ${route==='developers'?'on':''}" onclick="go('/developers')"><span class="dot"></span>Developers · API</button>`+
+     `<button class="side-item ${route==='method'?'on':''}" onclick="go('/method')"><span class="dot"></span>How we build these</button>`;
+  sb.innerHTML=h;
+}
+
+function renderOverview(){
+  const m=document.getElementById('main');
+  let h=`<div class="streetread">Street read <span class="val ${DATA.summary==='DISTRESS RISING'?'sr-stress':DATA.summary==='STEADY'?'sr-steady':'sr-mixed'}">${esc(DATA.summary)}</span></div>
+    <p class="lede">The world reads GDP. We read <b>pawn shops, cardboard boxes, and the planes over the Atlantic.</b> Every indicator below is computed live from free public data. Click any one to see exactly how it's built, what it's really measuring, and how far to trust it.</p>`;
+  for(const [g,lbl] of GROUPS){
+    const items=DATA.indices.filter((i)=>i.group===g); if(!items.length)continue;
+    h+=`<div class="sectionlbl">// ${lbl}</div><div class="rows">`;
+    for(const i of items){
+      h+=`<div class="row" onclick="go('/i/${i.key}')">
+        <div class="nm"><div class="t">${esc(i.name)}</div><div class="k">${esc(i.tick)}</div></div>
+        <div class="rd">${esc(i.read)}</div>
+        <div class="vwrap"><div class="v">${i.value==null?'—':esc(i.value)}</div><span class="sig ${TONE[i.tone]}">${esc(i.signalText)}</span></div>
+        <div class="arr">›</div></div>`;
     }
+    h+='</div>';
   }
-  function clock() {
-    const d = new Date(), p = (n) => String(n).padStart(2, '0');
-    const el = document.getElementById('clock');
-    if (el) el.textContent = `${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())} UTC`;
+  m.innerHTML=h;
+}
+
+function renderDetail(key){
+  const i=byKey(key); const m=document.getElementById('main');
+  if(!i){m.innerHTML='<p>Unknown index.</p>';return;}
+  const meth=METHODS[key];
+  let h=`<div class="crumb"><a href="#/">All indices</a> / ${esc(i.name)}</div>
+    <div class="d-head"><div><div class="d-title">${esc(i.name)}</div><div class="d-tick">${esc(i.tick)}</div></div>
+      <div class="d-valbox"><div class="d-val">${i.value==null?'—':esc(i.value)}</div><div class="d-unit">${esc(i.unit||'')}</div>
+        <div><span class="d-sig ${TONE[i.tone]}">${esc(i.signalText)}</span></div></div></div>
+    <div class="d-chart">${sparkSVG(i.spark,i.tone)}<div style="font-size:11px;color:var(--txtdim);margin-top:6px">// last ~6 sessions · SRC ${esc(i.src)}</div></div>
+    <p class="d-read">${esc(i.read)}</p>`;
+  if(meth&&meth.status==='live'){
+    h+='<div class="method">';
+    h+=`<div class="m-block"><h4>What it measures</h4><p>${meth.measures}</p></div>`;
+    h+=`<div class="m-block"><h4>The honest ground truth</h4><p>${meth.truth}</p></div>`;
+    h+=`<div class="m-block"><h4>The live proxy we compute</h4><p>${meth.proxy}</p></div>`;
+    h+=`<div class="m-block"><h4>The gold control</h4><p>${meth.control}</p></div>`;
+    h+=`<div class="m-block"><h4>How accurate is it, really?</h4><p>${meth.accuracy}</p></div>`;
+    h+='<div class="m-block"><h4>Data sources &amp; external APIs</h4><p>';
+    for(const s of meth.sources) h+=`<span class="srcpill"><span class="dot ${s.live?'live':'neut'}" style="width:7px;height:7px;border-radius:50%;display:inline-block"></span><b style="color:var(--txtbright)">${esc(s.n)}</b> — ${esc(s.d)}</span>`;
+    h+='</p></div></div>';
+  }else{
+    h+=`<div class="method"><div class="sectionlbl">// Methodology</div>
+      <div class="planned"><b>In the build queue.</b> We're building these one at a time so each reflects the truth — real data source, honest proxy, accuracy caveats. This one: ${esc(PLANNED[key]||'coming soon')}<br><br>The Pawn Index is done as the worked example — <a href="#/i/pawn_index">see how a finished one looks →</a></div></div>`;
   }
-  document.getElementById('mkt').textContent = marketOpen() ? 'OPEN' : 'CLOSED';
-  document.getElementById('mkt').className = marketOpen() ? 'st-green' : 'st-red';
-  clock(); setInterval(clock, 1000);
-  // Prefer the live API; fall back to the bundled snapshot.
-  fetch('/v1/indices').then((r) => r.ok ? r.json() : Promise.reject()).catch(() => fetch('data.json').then((r) => r.json()))
-    .then(render)
-    .catch(() => { document.getElementById('content').innerHTML = '<div class="loading">// Signal feed unavailable. Retry shortly.</div>'; });
+  m.innerHTML=h;
+}
+
+function renderDevelopers(){
+  document.getElementById('main').innerHTML=`<div class="prose">
+    <h2>// STREETINT serves its own API</h2>
+    <p>Every index is computed by a scheduled worker and served as JSON. Any dashboard — including the Risk Intelligence Index — can pull these values with a single request. The weird front page and any serious tool drink from the same tap.</p>
+    <h3>Endpoint</h3>
+    <pre><span class="k">GET</span> https://streetint.pages.dev/v1/indices</pre>
+    <p>Edge-cached 15 minutes, CORS-open, no auth. Returns:</p>
+    <pre>{
+  <span class="s">"summary"</span>: <span class="s">"MIXED"</span>,
+  <span class="s">"updated"</span>: <span class="s">"2026-07-07T…Z"</span>,
+  <span class="s">"indices"</span>: [
+    {
+      <span class="s">"key"</span>: <span class="s">"pawn_index"</span>,
+      <span class="s">"value"</span>: <span class="n">2.4</span>,
+      <span class="s">"unit"</span>: <span class="s">"% vs S&amp;P (5d)"</span>,
+      <span class="s">"tone"</span>: <span class="s">"stress"</span>,
+      <span class="s">"signalText"</span>: <span class="s">"rising · stress"</span>,
+      <span class="s">"spark"</span>: [<span class="n">1.01</span>, <span class="n">1.00</span>, <span class="n">1.02</span>],
+      <span class="s">"group"</span>: <span class="s">"distress"</span>
+    }
+  ]
+}</pre>
+    <h3>The tone field</h3>
+    <p><code>tone</code> is one of <code>stress</code> (red) · <code>warn</code> (amber) · <code>ok</code> (green) · <code>live</code> (cyan) · <code>neut</code> (gray) — polarity-aware and ready to colour a UI directly, so a consumer never has to know which direction is "bad" for each index.</p>
+  </div>`;
+}
+
+function renderMethod(){
+  document.getElementById('main').innerHTML=`<div class="prose">
+    <h2>// How we build these — and why you can trust them</h2>
+    <p>Weird indicators are only worth anything if they reflect the truth. So every STREETINT index is built to the same honest recipe, and each one's page shows its work.</p>
+    <h3>The recipe, every time</h3>
+    <table class="dtl">
+      <tr><th>Step</th><th>The question we answer on each index page</th></tr>
+      <tr><td>1 · Measures</td><td>What real-world stress is this actually a window into?</td></tr>
+      <tr><td>2 · Ground truth</td><td>What data would measure it perfectly? (Usually paid, quarterly, or lagged.)</td></tr>
+      <tr><td>3 · Live proxy</td><td>What free, fast data stands in for it — and exactly how do we compute it?</td></tr>
+      <tr><td>4 · Controls</td><td>What contaminates the signal, and how do we strip it out?</td></tr>
+      <tr><td>5 · Accuracy</td><td>How far can you trust it? Where does it lead, lag, or lie?</td></tr>
+      <tr><td>6 · Sources</td><td>Every external API it depends on, and whether that dependency is live.</td></tr>
+    </table>
+    <h3>What we depend on today</h3>
+    <p>v1 is deliberately keyless. Every number comes from one of four free public sources:</p>
+    <table class="dtl">
+      <tr><th>Source</th><th>Feeds</th><th>Notes</th></tr>
+      <tr><td>Yahoo Finance chart API</td><td>every stock / futures ticker</td><td>free, no key — but unofficial; can rate-limit</td></tr>
+      <tr><td>CBOE (via Yahoo)</td><td>SKEW, VIX</td><td>same feed</td></tr>
+      <tr><td>The Economist (GitHub CSV)</td><td>Big Mac Index</td><td>official, updated ~twice a year</td></tr>
+      <tr><td>adsb.lol</td><td>Tanker Tell</td><td>free live flight data, no key</td></tr>
+    </table>
+    <p>As we make indices more truthful, some will add <b>FRED</b> (free API key — Fed economic data) and <b>SEC EDGAR</b> (free — quarterly company filings) as ground-truth anchors. Every such dependency gets named on the index's own page, so nothing is a black box.</p>
+    <h3>Build progress</h3>
+    <p><b style="color:var(--green)">Pawn Index</b> — done, fully documented. The other nine are in the queue, built one at a time.</p>
+  </div>`;
+}
+
+function route(){
+  if(!DATA)return;
+  const hash=location.hash.replace(/^#/,'')||'/';
+  let r='home';
+  document.getElementById('main').scrollTop=0; window.scrollTo(0,0);
+  if(hash==='/'){r='home';renderOverview();}
+  else if(hash==='/developers'){r='developers';renderDevelopers();}
+  else if(hash==='/method'){r='method';renderMethod();}
+  else if(hash.startsWith('/i/')){const k=hash.slice(3);r='i:'+k;renderDetail(k);}
+  else{r='home';renderOverview();}
+  buildSidebar(r);
+  document.querySelectorAll('.topnav [data-nav]').forEach((a)=>{
+    const nav=a.getAttribute('data-nav');
+    a.classList.toggle('on',(nav==='home'&&(r==='home'||r.startsWith('i:')))||nav===r);
+  });
+}
+function go(path){location.hash='#'+path;}
+window.addEventListener('hashchange',route);
+
+function marketOpen(){const et=new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const wd=et.getDay()>=1&&et.getDay()<=5,mins=et.getHours()*60+et.getMinutes();return wd&&mins>=570&&mins<960;}
+function clock(){const d=new Date(),p=(n)=>String(n).padStart(2,'0');const el=document.getElementById('clock');
+  if(el)el.textContent=`${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())} UTC`;}
+document.getElementById('mkt').textContent=marketOpen()?'OPEN':'CLOSED';
+document.getElementById('mkt').className=marketOpen()?'st-green':'st-red';
+clock();setInterval(clock,1000);
+
+fetch('/v1/indices').then((r)=>r.ok?r.json():Promise.reject()).catch(()=>fetch('data.json').then((r)=>r.json()))
+  .then((d)=>{DATA=d;route();})
+  .catch(()=>{document.getElementById('main').innerHTML='<div style="color:var(--txtdim);padding:30px 0">// Signal feed unavailable. Retry shortly.</div>';});
 </script>
 </body>
 </html>
