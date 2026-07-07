@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STREETINT — Alternative Economic Intelligence</title>
+<meta name="description" content="Ten unconventional economic indicators — pawn shops, cardboard boxes, military tankers — computed live and served as an API.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070a07; --panel:#0c110c; --panel2:#0f160f; --line:#1c2a1c; --line2:#294029;
+    --green:#43e97b; --greendim:#2f9d57; --grid:#0f1a0f;
+    --cyan:#38e1e1; --amber:#ffc24b; --red:#ff5d6c; --magenta:#c58bff;
+    --txt:#b9d4b9; --txtdim:#6f8c6f; --txtbright:#e8ffe8;
+    --pixel:'Press Start 2P',monospace; --mono:'Share Tech Mono',monospace; --vt:'VT323',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:15px;line-height:1.55;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:44px 44px;-webkit-font-smoothing:antialiased}
+  a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 18px 70px}
+
+  .statusbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:12px;letter-spacing:.04em;
+    color:var(--txtdim);padding:9px 0;border-bottom:1px solid var(--line);text-transform:uppercase}
+  .statusbar .seg{display:flex;align-items:center;gap:6px}
+  .dotpulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .st-red{color:var(--red)} .st-green{color:var(--green)}
+  .push{margin-left:auto}
+
+  header.mast{padding:34px 0 22px;border-bottom:2px solid var(--line2)}
+  .callsign{font-family:var(--pixel);font-size:11px;color:var(--greendim);letter-spacing:.12em;margin-bottom:16px}
+  h1.word{font-family:var(--pixel);font-size:clamp(24px,5.5vw,50px);line-height:1.05;color:var(--txtbright);
+    text-shadow:0 0 18px rgba(67,233,123,.4);letter-spacing:.02em}
+  h1.word .hl{color:var(--green)}
+  .tagline{font-size:16px;color:var(--txtdim);margin-top:14px;letter-spacing:.02em;max-width:74ch}
+  .tagline b{color:var(--txt)}
+  .streetread{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:13px;color:var(--txtdim);
+    text-transform:uppercase;letter-spacing:.06em}
+  .streetread .val{font-family:var(--vt);font-size:26px;letter-spacing:.03em}
+  .sr-stress{color:var(--red)} .sr-mixed{color:var(--amber)} .sr-steady{color:var(--green)}
+
+  .sectionlbl{font-family:var(--pixel);font-size:11px;color:var(--greendim);letter-spacing:.1em;
+    margin:36px 0 14px;padding-bottom:9px;border-bottom:1px solid var(--line);text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+  .card{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:15px 16px 14px;
+    transition:border-color .15s,transform .15s}
+  .card:hover{border-color:var(--line2);transform:translateY(-2px)}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
+  .card .name{font-size:15px;color:var(--txtbright);letter-spacing:.02em;text-transform:uppercase}
+  .card .tick{font-size:11px;color:var(--txtdim);margin-top:2px}
+  .sig{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;border:1px solid}
+  .t-stress{color:var(--red);border-color:var(--red)} .t-warn{color:var(--amber);border-color:var(--amber)}
+  .t-ok{color:var(--green);border-color:var(--green)} .t-live{color:var(--cyan);border-color:var(--cyan)}
+  .t-neut{color:var(--txtdim);border-color:var(--line2)}
+  .valrow{display:flex;align-items:baseline;gap:10px;margin:2px 0 8px}
+  .val{font-family:var(--vt);font-size:40px;line-height:1;color:var(--txtbright)}
+  .unit{font-size:12px;color:var(--txtdim)}
+  .spark{margin:4px 0 10px;display:block}
+  .read{font-size:13px;color:var(--txt);line-height:1.5}
+  .src{font-size:11px;color:var(--greendim);margin-top:10px;letter-spacing:.03em}
+  .loading{color:var(--txtdim);padding:30px 0;font-size:14px}
+
+  .api{margin-top:40px;border:1px dashed var(--line2);border-radius:4px;padding:20px 22px;background:var(--panel)}
+  .api h3{font-family:var(--pixel);font-size:12px;color:var(--cyan);letter-spacing:.06em;margin-bottom:12px}
+  .api p{font-size:13.5px;color:var(--txtdim);max-width:72ch;margin-bottom:14px}
+  .api pre{background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:12px 14px;overflow-x:auto;
+    font-family:var(--mono);font-size:12.5px;color:var(--txt);line-height:1.6}
+  .api .k{color:var(--magenta)} .api .s{color:var(--amber)} .api .n{color:var(--cyan)}
+
+  footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--txtdim);line-height:1.7}
+  footer b{color:var(--txt)}
+  .disclaimer{margin-top:10px;color:var(--greendim);font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="statusbar">
+    <span class="seg"><span class="dotpulse"></span>STATUS: <span class="st-green">OPERATIONAL</span></span>
+    <span class="seg" id="clock">--:--:-- UTC</span>
+    <span class="seg">STOCK MARKET: <span id="mkt" class="st-red">—</span></span>
+    <span class="seg push" id="updated">SNAPSHOT · —</span>
+  </div>
+
+  <header class="mast">
+    <div class="callsign">STREETINT // STREET-LEVEL ECONOMIC INTELLIGENCE</div>
+    <h1 class="word">STREET<span class="hl">INT</span></h1>
+    <p class="tagline">The world reads GDP. We read <b>pawn shops, cardboard boxes, and the planes over the Atlantic.</b> Ten unconventional indicators — verified, free-sourced, computed live, and served as an API.</p>
+    <div class="streetread">Street read <span class="val" id="summary">—</span></div>
+  </header>
+
+  <div id="content"><div class="loading">// Fetching live signals…</div></div>
+
+  <div class="api">
+    <h3>// STREETINT SERVES ITS OWN API</h3>
+    <p>Every index is computed by a scheduled worker and served as JSON. Any dashboard can pull these values with one request — the weird front page and any serious tool drink from the same tap.</p>
+    <pre><span class="k">GET</span> https://streetint.pages.dev/v1/indices
+
+{
+  <span class="s">"summary"</span>: <span class="s">"MIXED"</span>,
+  <span class="s">"indices"</span>: [
+    { <span class="s">"key"</span>:<span class="s">"pawn_index"</span>, <span class="s">"value"</span>:<span class="n">2.4</span>, <span class="s">"tone"</span>:<span class="s">"stress"</span> },
+    { <span class="s">"key"</span>:<span class="s">"tanker_tell"</span>, <span class="s">"value"</span>:<span class="n">22</span>, <span class="s">"tone"</span>:<span class="s">"warn"</span> }
+  ],
+  <span class="s">"updated"</span>: <span class="s">"2026-07-07T…Z"</span>
+}</pre>
+  </div>
+
+  <footer>
+    <b>STREETINT</b> — reading the economy sideways. Ten indicators mined from <i>Freakonomics</i> and the wider tradition of unconventional signals, each fact-checked and free-sourced.<br>
+    Data: Yahoo Finance · CBOE · The Economist · adsb.lol. All computed keyless on a schedule.
+    <div class="disclaimer">// Not investment advice. Indicators are interesting, not infallible. Built by Hriday · an experiment.</div>
+  </footer>
+
+</div>
+
+<script>
+  const GROUPS = [
+    ['distress', '// WHEN MONEY GETS TIGHT'],
+    ['physical', "// THE PHYSICAL ECONOMY CAN'T LIE"],
+    ['fear', '// FEAR, MONEY & THE WORLD'],
+  ];
+  const TONE = { stress:'t-stress', warn:'t-warn', ok:'t-ok', live:'t-live', neut:'t-neut' };
+  const TONE_STROKE = { stress:'#ff5d6c', warn:'#ffc24b', ok:'#43e97b', live:'#38e1e1', neut:'#6f8c6f' };
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+  function sparkSVG(pts, tone) {
+    if (!pts || pts.length < 2) return '<div style="height:30px"></div>';
+    const min = Math.min(...pts), max = Math.max(...pts), rng = (max - min) || 1;
+    const W = 200, H = 30;
+    const poly = pts.map((p, i) => `${(i / (pts.length - 1) * W).toFixed(1)},${(H - ((p - min) / rng) * (H - 6) - 3).toFixed(1)}`).join(' ');
+    return `<svg class="spark" width="100%" height="30" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline points="${poly}" fill="none" stroke="${TONE_STROKE[tone] || '#6f8c6f'}" stroke-width="2"/></svg>`;
+  }
+  function card(i) {
+    const v = i.value == null ? '—' : i.value;
+    return `<div class="card">
+      <div class="top"><div><div class="name">${esc(i.name)}</div><div class="tick">${esc(i.tick)}</div></div>
+        <span class="sig ${TONE[i.tone] || 't-neut'}">${esc(i.signalText)}</span></div>
+      <div class="valrow"><span class="val">${esc(v)}</span><span class="unit">${esc(i.unit || '')}</span></div>
+      ${sparkSVG(i.spark, i.tone)}
+      <div class="read">${esc(i.read)}</div>
+      <div class="src">SRC · ${esc(i.src)}</div>
+    </div>`;
+  }
+  function marketOpen() {
+    const now = new Date();
+    const et = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const wd = et.getDay() >= 1 && et.getDay() <= 5;
+    const mins = et.getHours() * 60 + et.getMinutes();
+    return wd && mins >= 570 && mins < 960;
+  }
+  function render(data) {
+    const c = document.getElementById('content');
+    let html = '';
+    for (const [g, lbl] of GROUPS) {
+      const items = data.indices.filter((i) => i.group === g);
+      if (!items.length) continue;
+      html += `<div class="sectionlbl">${lbl}</div><div class="grid">${items.map(card).join('')}</div>`;
+    }
+    c.innerHTML = html;
+    const s = document.getElementById('summary');
+    s.textContent = data.summary;
+    s.className = 'val ' + (data.summary === 'DISTRESS RISING' ? 'sr-stress' : data.summary === 'STEADY' ? 'sr-steady' : 'sr-mixed');
+    if (data.updated) {
+      const d = new Date(data.updated);
+      document.getElementById('updated').textContent = 'SNAPSHOT · ' + d.toISOString().slice(0, 16).replace('T', ' ') + 'Z';
+    }
+  }
+  function clock() {
+    const d = new Date(), p = (n) => String(n).padStart(2, '0');
+    const el = document.getElementById('clock');
+    if (el) el.textContent = `${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())} UTC`;
+  }
+  document.getElementById('mkt').textContent = marketOpen() ? 'OPEN' : 'CLOSED';
+  document.getElementById('mkt').className = marketOpen() ? 'st-green' : 'st-red';
+  clock(); setInterval(clock, 1000);
+  // Prefer the live API; fall back to the bundled snapshot.
+  fetch('/v1/indices').then((r) => r.ok ? r.json() : Promise.reject()).catch(() => fetch('data.json').then((r) => r.json()))
+    .then(render)
+    .catch(() => { document.getElementById('content').innerHTML = '<div class="loading">// Signal feed unavailable. Retry shortly.</div>'; });
+</script>
+</body>
+</html>

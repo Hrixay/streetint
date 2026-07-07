@@ -1,0 +1,192 @@
+{
+  "updated": "2026-07-07T19:47:44.746Z",
+  "summary": "MIXED",
+  "indices": [
+    {
+      "key": "pawn_index",
+      "name": "Pawn Index",
+      "tick": "FCFS · EZPW vs S&P",
+      "group": "distress",
+      "value": 2.9,
+      "unit": "% vs S&P (5d)",
+      "tone": "stress",
+      "signalText": "rising · stress",
+      "spark": [
+        0.17,
+        0.17,
+        0.17,
+        0.17,
+        0.17,
+        0.17
+      ],
+      "read": "Pawn lenders vs the market — households monetizing possessions. Gold moved +2.5% (the control: a bullion rally can flatter these names).",
+      "src": "Yahoo · daily"
+    },
+    {
+      "key": "dollar_store",
+      "name": "Dollar-Store Trade-Down",
+      "tick": "DG · DLTR vs XLY",
+      "group": "distress",
+      "value": -1,
+      "unit": "% vs retail (5d)",
+      "tone": "ok",
+      "signalText": "easing",
+      "spark": [
+        1.03,
+        1.01,
+        1,
+        1.03,
+        1.01,
+        1.01
+      ],
+      "read": "Discounters vs mid-market retail. Outperformance = shoppers trading down, the squeeze climbing the income ladder.",
+      "src": "Yahoo · daily"
+    },
+    {
+      "key": "debt_collector",
+      "name": "Debt-Collector Barometer",
+      "tick": "PRAA · ECPG vs S&P",
+      "group": "distress",
+      "value": -4.1,
+      "unit": "% vs S&P (5d)",
+      "tone": "ok",
+      "signalText": "easing",
+      "spark": [
+        0.08,
+        0.08,
+        0.08,
+        0.07,
+        0.07,
+        0.07
+      ],
+      "read": "The rare stocks that rally when loans go bad. Strength = a default wave being priced 2–3 quarters early.",
+      "src": "Yahoo · daily"
+    },
+    {
+      "key": "copper_gold",
+      "name": "Dr. Copper",
+      "tick": "copper ÷ gold",
+      "group": "physical",
+      "value": 1.5,
+      "unit": "ratio ×1000",
+      "tone": "warn",
+      "signalText": "falling · risk-off",
+      "spark": [
+        1.52,
+        1.54,
+        1.51,
+        1.49,
+        1.49,
+        1.5
+      ],
+      "read": "The metal with a PhD in economics, divided by fear. Falling ratio = growth expectations deteriorating.",
+      "src": "Yahoo HG=F/GC=F · daily"
+    },
+    {
+      "key": "cardboard",
+      "name": "Cardboard Box Index",
+      "tick": "PKG · IP · SW",
+      "group": "physical",
+      "value": -3.1,
+      "unit": "% vs S&P (5d)",
+      "tone": "warn",
+      "signalText": "contracting",
+      "spark": [
+        0.14,
+        0.14,
+        0.14,
+        0.14,
+        0.14,
+        0.14
+      ],
+      "read": "Everything ships in a box first. Box-maker weakness = a goods slowdown forming before GDP admits it. (Stock proxy; Fibre Box shipments are the deeper cut.)",
+      "src": "Yahoo · daily"
+    },
+    {
+      "key": "rv_canary",
+      "name": "RV Canary",
+      "tick": "THO · WGO",
+      "group": "physical",
+      "value": -5.3,
+      "unit": "% vs S&P (5d)",
+      "tone": "warn",
+      "signalText": "warning",
+      "spark": [
+        0.07,
+        0.07,
+        0.07,
+        0.07,
+        0.07,
+        0.07
+      ],
+      "read": "RV makers — the most cancellable purchase there is. One Indiana county builds 80% of them; it led 2008 and 2020 by 6–12 months.",
+      "src": "Yahoo · daily"
+    },
+    {
+      "key": "quiet_fear",
+      "name": "Quiet Fear",
+      "tick": "SKEW vs VIX",
+      "group": "fear",
+      "value": 145,
+      "unit": "SKEW · VIX 16.3",
+      "tone": "warn",
+      "signalText": "diverging",
+      "spark": [
+        139,
+        144,
+        150,
+        155,
+        150,
+        145
+      ],
+      "read": "Crash insurance being bought while the surface stays calm. High SKEW + low VIX = fear without stress, smart money hedging quietly.",
+      "src": "CBOE via Yahoo · daily"
+    },
+    {
+      "key": "big_mac",
+      "name": "Big Mac Index",
+      "tick": "Economist · currency stress",
+      "group": "fear",
+      "value": -60,
+      "unit": "Taiwan vs USD",
+      "tone": "live",
+      "signalText": "live feed",
+      "spark": [],
+      "read": "A burger as a currency-stress detector. The widest undervaluation flags the most-pressured currency. Most undervalued: Taiwan.",
+      "src": "Economist CSV · 2026-01-01"
+    },
+    {
+      "key": "baltic_dry",
+      "name": "Baltic Dry",
+      "tick": "BDRY · dry-bulk freight",
+      "group": "fear",
+      "value": 12.89,
+      "unit": "BDRY ETF",
+      "tone": "ok",
+      "signalText": "rising",
+      "spark": [
+        11.63,
+        11.87,
+        12.05,
+        12.27,
+        12.96,
+        12.89
+      ],
+      "read": "The price to hire a cargo ship — impossible to fake, every quote is a real cargo. It collapsed 94% before the 2008 trade crash.",
+      "src": "Yahoo BDRY · daily"
+    },
+    {
+      "key": "tanker_tell",
+      "name": "Tanker Tell",
+      "tick": "adsb.lol · US refuelers",
+      "group": "fear",
+      "value": null,
+      "unit": "refuelers airborne",
+      "tone": "live",
+      "signalText": "live feed",
+      "spark": [],
+      "read": "US military tankers airborne right now vs a ~3-plane baseline. Refuelers can't hide — an anomalous surge preceded the June 2025 strikes by days.",
+      "src": "adsb.lol /v2/mil · live"
+    }
+  ]
+}

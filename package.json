@@ -1,0 +1,11 @@
+{
+  "name": "streetint",
+  "version": "0.1.0",
+  "private": true,
+  "description": "STREETINT — alternative economic intelligence. Ten unconventional indicators, computed live and served as an API.",
+  "type": "module",
+  "scripts": {
+    "gen": "node scripts/gen.mjs",
+    "dev": "npx wrangler pages dev web"
+  }
+}
